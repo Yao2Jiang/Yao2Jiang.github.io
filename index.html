@@ -11,12 +11,12 @@
 <!-- hexo-inject:begin --><!-- hexo-inject:end --><ol>
 <li>Pytorch’s Autograd mechanism.</li>
 <li>Techniques for effective training.</li>
-<li>Miscellaneous information.<h1 id="Pytorch’s-Autograd-mechanism"><a href="#Pytorch’s-Autograd-mechanism" class="headerlink" title="Pytorch’s Autograd mechanism"></a>Pytorch’s Autograd mechanism</h1></li>
+<li>Miscellaneous information.</li>
 </ol>
-<h2 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h2><p>In Pytorch, a Computational graph is constructed when we mathmatical operations are performed on tensors.</p>
+<h1 id="Pytorch’s-Autograd-mechanism"><a href="#Pytorch’s-Autograd-mechanism" class="headerlink" title="Pytorch’s Autograd mechanism"></a>Pytorch’s Autograd mechanism</h1><h2 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h2><p>In Pytorch, a Computational graph is constructed when we mathmatical operations are performed on tensors.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor(2.0, requires_grad=True)</span><br><span class="line">b = torch.tensor(3.0, requires_grad=True)</span><br><span class="line">c = a * b</span><br></pre></td></tr></table></figure>
 
-<p>The computational graph for code above is structed as follows:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/computational_graph.png" alt="avatar"><br>there are two types of nodes in a Computational Graph: leaf nodes and root nodes.</p>
+<p>The computational graph for code above is structed as follows:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/computational_graph.png" alt="Fig1. process of bulding computational graph"><br>there are two types of nodes in a Computational Graph: leaf nodes and root nodes.</p>
 <ul>
 <li>leaf nodes are the input tensors that store the gradient by default in their <strong>grad</strong> attributes.</li>
 <li>root nodes are the output(intermediate) tensors output. by default, they don’t have a <strong>grad</strong> attribute but process a <strong>grad_fn</strong> object instead.</li>
@@ -35,7 +35,7 @@
 <h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2><p>A hook is basically a function that is executed when we either forward or backward is called.<br>There are two primary types of hook: tensor hooks and module hooks.</p>
 <ul>
 <li>module hooks: Utilized through the method <code>moduel.register_forward_hook()</code></li>
-<li>tensor hooks: For root nodes, the hook is embedded within the <strong>grad_fn</strong> attribute.<br>Below is an example showcasing the useage of hooks:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/hook.png" alt="avatar"><br>Root nodes can retain gradients using <code>retain_grad()</code> function.</li>
+<li>tensor hooks: For root nodes, the hook is embedded within the <strong>grad_fn</strong> attribute.<br>Below is an example showcasing the useage of hooks:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/hook.png" alt="useage of hood"><br>Root nodes can retain gradients using <code>retain_grad()</code> function.</li>
 </ul>
 <h1 id="Techniques-for-effective-training"><a href="#Techniques-for-effective-training" class="headerlink" title="Techniques for effective training"></a>Techniques for effective training</h1><h2 id="1-Gradient-Accumulation"><a href="#1-Gradient-Accumulation" class="headerlink" title="1. Gradient Accumulation"></a>1. Gradient Accumulation</h2><p>This method can make traning with a big batch size even with limited computational resource.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loss.backward()</span><br><span class="line">if condition:</span><br><span class="line">    optimizer.step()</span><br><span class="line">	optimizer.zero_grad()</span><br></pre></td></tr></table></figure>
