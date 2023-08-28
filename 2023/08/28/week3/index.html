@@ -11,14 +11,18 @@
 <!-- hexo-inject:begin --><!-- hexo-inject:end --><ol>
 <li>Pytorch’s Autograd mechanism.</li>
 <li>Techniques for effective training.</li>
-<li>Miscellaneous information.<h1 id="Pytorch’s-Autograd-mechanism"><a href="#Pytorch’s-Autograd-mechanism" class="headerlink" title="Pytorch’s Autograd mechanism"></a>Pytorch’s Autograd mechanism</h1><h2 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h2>In Pytorch, a Computational graph is constructed when we mathmatical operations are performed on tensors.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor(2.0, requires_grad=True)</span><br><span class="line">b = torch.tensor(3.0, requires_grad=True)</span><br><span class="line">c = a * b</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>Miscellaneous information.<h1 id="Pytorch’s-Autograd-mechanism"><a href="#Pytorch’s-Autograd-mechanism" class="headerlink" title="Pytorch’s Autograd mechanism"></a>Pytorch’s Autograd mechanism</h1></li>
 </ol>
+<h2 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h2><p>In Pytorch, a Computational graph is constructed when we mathmatical operations are performed on tensors.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor(2.0, requires_grad=True)</span><br><span class="line">b = torch.tensor(3.0, requires_grad=True)</span><br><span class="line">c = a * b</span><br></pre></td></tr></table></figure>
+
 <p>The computational graph for code above is structed as follows:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/computational_graph.png" alt="avatar"><br>there are two types of nodes in a Computational Graph: leaf nodes and root nodes.</p>
 <ul>
 <li>leaf nodes are the input tensors that store the gradient by default in their <strong>grad</strong> attributes.</li>
-<li>root nodes are the output(intermediate) tensors output. by default, they don’t have a <strong>grad</strong> attribute but process a <strong>grad_fn</strong> object instead.<h2 id="Grad-Modes"><a href="#Grad-Modes" class="headerlink" title="Grad Modes"></a>Grad Modes</h2>In Pytorch, there are three gradient modes in Pytorch: Grad mode, no-grad mode and inference mode(introduced in version 1.9).</li>
+<li>root nodes are the output(intermediate) tensors output. by default, they don’t have a <strong>grad</strong> attribute but process a <strong>grad_fn</strong> object instead.</li>
+</ul>
+<h2 id="Grad-Modes"><a href="#Grad-Modes" class="headerlink" title="Grad Modes"></a>Grad Modes</h2><p>In Pytorch, there are three gradient modes in Pytorch: Grad mode, no-grad mode and inference mode(introduced in version 1.9).</p>
+<ul>
 <li>grad mode: This is the default mode in Pytorch. the attribute <strong>requires_grad</strong> in functional only in this mode.</li>
 <li>no-grad mode: Computations are never recorded in this mode. <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">with torch.no_grad():</span><br></pre></td></tr></table></figure>
 
@@ -26,18 +30,24 @@
 </ul>
 <p>The above code act as a context manager to activate no-grad mode. This mode provides a convient method to prevent gradient recording without necessity of<br>setting <strong>requires_grad</strong> as false.</p>
 <ul>
-<li>inference mode: It is a feature introduced in Pytorch 1.9 . It is similar to the no-grad mode but offers high effciency.<br>tensors initialized in this mode shouldn’t be used outside its context.<h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2>A hook is basically a function that is executed when we either forward or backward is called.<br>There are two primary types of hook: tensor hooks and module hooks.</li>
-<li>module hooks: Utilized through the method <code>moduel.register_forward_hook()</code></li>
-<li>tensor hooks: For root nodes, the hook is embedded within the <strong>grad_fn</strong> attribute.<br>Below is an example showcasing the useage of hooks:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/hook.png" alt="avatar"><br>Root nodes can retain gradients using <code>retain_grad()</code> function.<h1 id="Techniques-for-effective-training"><a href="#Techniques-for-effective-training" class="headerlink" title="Techniques for effective training"></a>Techniques for effective training</h1><h2 id="1-Gradient-Accumulation"><a href="#1-Gradient-Accumulation" class="headerlink" title="1. Gradient Accumulation"></a>1. Gradient Accumulation</h2>This method can make traning with a big batch size even with limited computational resource.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loss.backward()</span><br><span class="line">if condition:</span><br><span class="line">    optimizer.step()</span><br><span class="line">	optimizer.zero_grad()</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>inference mode: It is a feature introduced in Pytorch 1.9 . It is similar to the no-grad mode but offers high effciency.<br>tensors initialized in this mode shouldn’t be used outside its context.</li>
 </ul>
+<h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2><p>A hook is basically a function that is executed when we either forward or backward is called.<br>There are two primary types of hook: tensor hooks and module hooks.</p>
+<ul>
+<li>module hooks: Utilized through the method <code>moduel.register_forward_hook()</code></li>
+<li>tensor hooks: For root nodes, the hook is embedded within the <strong>grad_fn</strong> attribute.<br>Below is an example showcasing the useage of hooks:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/hook.png" alt="avatar"><br>Root nodes can retain gradients using <code>retain_grad()</code> function.</li>
+</ul>
+<h1 id="Techniques-for-effective-training"><a href="#Techniques-for-effective-training" class="headerlink" title="Techniques for effective training"></a>Techniques for effective training</h1><h2 id="1-Gradient-Accumulation"><a href="#1-Gradient-Accumulation" class="headerlink" title="1. Gradient Accumulation"></a>1. Gradient Accumulation</h2><p>This method can make traning with a big batch size even with limited computational resource.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loss.backward()</span><br><span class="line">if condition:</span><br><span class="line">    optimizer.step()</span><br><span class="line">	optimizer.zero_grad()</span><br></pre></td></tr></table></figure>
+
 <h2 id="2-Batch-Normalization"><a href="#2-Batch-Normalization" class="headerlink" title="2. Batch Normalization"></a>2. Batch Normalization</h2><ul>
 <li>Compute statistics<br>$$ \mu_B = \frac{1}{m}\sum_{i=1}^{m}x_i  $$<br>$$ \sigma_B^2 = \frac{1}{m}(x_i - \mu_B)^2 $$</li>
 <li>Normalize<br>$$ \hat{x_i}^2 = \frac{x_i - \mu}{\sqrt{\sigma_B^2 + \epsilon}} $$<br>$\epsilon$ is a samll constant added for numerical stability.</li>
 <li>Scale and shift<br>$$ y_i = \gamma x_i + \beta $$<br>$\gamma$ and $\beta$ are two learnable parameters.<br>scale and shift operations are curcial there are cases where the network might perfer the activations to have a differtn mean and variance<br>rather than 0 and 1.<br>During inference, there are not enough batches to compute the mean and variance. Instead, the runing average of the mean and variance, computed<br>during training, is used. </li>
-<li>Advantages<br>Faster Convergence:<br>Ensuring the activations have a consistent distribution;<br>Mitigate the risk of activations reaching extremly high or low values. <h2 id="3-Layer-Normalization"><a href="#3-Layer-Normalization" class="headerlink" title="3. Layer Normalization"></a>3. Layer Normalization</h2>while Batch Normalization normalizes across the batch dimension, Layer Normalization normalizes across the featuer dimension.<br>It is useful for sepcific architecture like the RNN series.<h1 id="Miscellaneous-information"><a href="#Miscellaneous-information" class="headerlink" title="Miscellaneous information"></a>Miscellaneous information</h1>In Pytorch, the broadcasting should follow the rules:</li>
+<li>Advantages<br>Faster Convergence:<br>Ensuring the activations have a consistent distribution;<br>Mitigate the risk of activations reaching extremly high or low values. </li>
 </ul>
+<h2 id="3-Layer-Normalization"><a href="#3-Layer-Normalization" class="headerlink" title="3. Layer Normalization"></a>3. Layer Normalization</h2><p>while Batch Normalization normalizes across the batch dimension, Layer Normalization normalizes across the featuer dimension.<br>It is useful for sepcific architecture like the RNN series.</p>
+<h1 id="Miscellaneous-information"><a href="#Miscellaneous-information" class="headerlink" title="Miscellaneous information"></a>Miscellaneous information</h1><p>In Pytorch, the broadcasting should follow the rules:</p>
 <ol>
 <li>Each tensors has at least one dimension. </li>
 <li>The dimension sizes must be equal, one of them is 1, or one of them doesn’t exists.</li>
