@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="week3"><meta name="keywords" content><meta name="author" content="Conglei Xu"><meta name="copyright" content="Conglei Xu"><title>week3 | Conglei Xu</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Pytorch’s-Autograd-mechanism"><span class="toc-number">2.</span> <span class="toc-text">Pytorch’s Autograd mechanism</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Computational-Graph"><span class="toc-number">2.1.</span> <span class="toc-text">Computational Graph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Grad-Modes"><span class="toc-number">2.2.</span> <span class="toc-text">Grad Modes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hook"><span class="toc-number">2.3.</span> <span class="toc-text">Hook</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Techniques-for-effective-training"><span class="toc-number">3.</span> <span class="toc-text">Techniques for effective training</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Miscellaneous-information"><span class="toc-number">4.</span> <span class="toc-text">Miscellaneous information</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/new.jpg"></div><div class="author-info__name text-center">Conglei Xu</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/xiaojianhai">Follow me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">16</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">10</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/header.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Conglei Xu</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">week3</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-08-28</time></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p>The knowledge acquired this week can be categorized into three sections:</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><ol>
+<li>Pytorch’s Autograd mechanism.</li>
+<li>Techniques for effective training.</li>
+<li>Miscellaneous information.<h1 id="Pytorch’s-Autograd-mechanism"><a href="#Pytorch’s-Autograd-mechanism" class="headerlink" title="Pytorch’s Autograd mechanism"></a>Pytorch’s Autograd mechanism</h1><h2 id="Computational-Graph"><a href="#Computational-Graph" class="headerlink" title="Computational Graph"></a>Computational Graph</h2>In Pytorch, a Computational graph is constructed when we mathmatical operations are performed on tensors.<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.tensor(2.0, requires_grad=True)</span><br><span class="line">b = torch.tensor(3.0, requires_grad=True)</span><br><span class="line">c = a * b</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>The computational graph for code above is structed as follows:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/computational_graph.png" alt="avatar"><br>there are two types of nodes in a Computational Graph: leaf nodes and root nodes.</p>
+<ul>
+<li>leaf nodes are the input tensors that store the gradient by default in their <strong>grad</strong> attributes.</li>
+<li>root nodes are the output(intermediate) tensors output. by default, they don’t have a <strong>grad</strong> attribute but process a <strong>grad_fn</strong> object instead.<h2 id="Grad-Modes"><a href="#Grad-Modes" class="headerlink" title="Grad Modes"></a>Grad Modes</h2>In Pytorch, there are three gradient modes in Pytorch: Grad mode, no-grad mode and inference mode(introduced in version 1.9).</li>
+<li>grad mode: This is the default mode in Pytorch. the attribute <strong>requires_grad</strong> in functional only in this mode.</li>
+<li>no-grad mode: Computations are never recorded in this mode. <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">with torch.no_grad():</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>The above code act as a context manager to activate no-grad mode. This mode provides a convient method to prevent gradient recording without necessity of<br>setting <strong>requires_grad</strong> as false.</p>
+<ul>
+<li>inference mode: It is a feature introduced in Pytorch 1.9 . It is similar to the no-grad mode but offers high effciency.<br>tensors initialized in this mode shouldn’t be used outside its context.<h2 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h2>A hook is basically a function that is executed when we either forward or backward is called.<br>There are two primary types of hook: tensor hooks and module hooks.</li>
+<li>module hooks: Utilized through the method <code>moduel.register_forward_hook()</code></li>
+<li>tensor hooks: For root nodes, the hook is embedded within the <strong>grad_fn</strong> attribute.<br>Below is an example showcasing the useage of hooks:<br><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/pictures/week3/hook.png" alt="avatar"><br>Root nodes can retain gradients using <code>retain_grad()</code> function.<h1 id="Techniques-for-effective-training"><a href="#Techniques-for-effective-training" class="headerlink" title="Techniques for effective training"></a>Techniques for effective training</h1></li>
+</ul>
+<ol>
+<li><p>gradient accumulation: This method can make traning with a big batch size even with limited computational resource.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">loss.backward()</span><br><span class="line">if condition:</span><br><span class="line">    optimizer.step()</span><br><span class="line">	optimizer.zero_grad()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Batch Normalization</p>
+</li>
+</ol>
+<ul>
+<li>Compute statistics<br>$$ \mu_B = \frac{1}{m}\sum_{i=1}^{m}x_i  $$<br>$$ \sigma_B^2 = \frac{1}{m}(x_i - \mu_B)^2 $$</li>
+<li>Normalize<br>$$ \hat{x_i}^2 = \frac{x_i - \mu}{\sqrt{\sigma_B^2 + \epsilon}} $$<br>$\epsilon$ is a samll constant added for numerical stability.</li>
+<li>Scale and shift<br>$$ y_i = \gamma x_i + \beta $$<br>$\gamma$ and $\beta$ are two learnable parameters.<br>scale and shift operations are curcial there are cases where the network might perfer the activations to have a differtn mean and variance<br>rather than 0 and 1.<br>During inference, there are not enough batches to compute the mean and variance. Instead, the runing average of the mean and variance, computed<br>during training, is used. </li>
+<li>Advantages<br>Faster Convergence:<br>Ensuring the activations have a consistent distribution;<br>Mitigate the risk of activations reaching extremly high or low values. </li>
+</ul>
+<ol start="3">
+<li>Layer Normalization<br>while Batch Normalization normalizes across the batch dimension, Layer Normalization normalizes across the featuer dimension.<br>It is useful for sepcific architecture like the RNN series.<h1 id="Miscellaneous-information"><a href="#Miscellaneous-information" class="headerlink" title="Miscellaneous information"></a>Miscellaneous information</h1>In Pytorch, the broadcasting should follow the rules:</li>
+<li>Each tensors has at least one dimension. </li>
+<li>The dimension sizes must be equal, one of them is 1, or one of them doesn’t exists.</li>
+</ol>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/08/09/week2/"><span>Week 2</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/header.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Conglei Xu</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://xiaojianhai.github.io/">blog</a>!</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body></html>
