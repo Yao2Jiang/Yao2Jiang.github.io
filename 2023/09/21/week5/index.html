@@ -13,8 +13,8 @@
 <li>transitional probability: give a new state based on the current state and agent’s action.<br>transition step: for a state $ s $, the agent choose to take an action, ant then the environment gives<br>a new state $ \acute{a} $ and a reward r. this known as a transition step, represented by a tuple $ (s, a, \acute{a}, r) $.</li>
 </ol>
 <p>we use $ \mathbb{P} $ represent the probability of a transiton step, $ P $ denote the function of a transition from $ s $ to<br>$ \acute{s} $.</p>
-<p>$$ P(\acute{s}, r | a, s) = \mathbb{P}[ S_{t+1}={\acute{s}, r | S_t=s, a] $$</p>
-<p>$$ P(\acute{s}|a, s) = \sum_{r} {\mathbb{P}[ S_{t+1}={\acute{s}, r | S_t=s, a]} $$</p>
+<p>$$ P(\acute{s}, r | a, s) = \mathbb{P}[ S_{t+1}={\acute{s}, r | S_t=s, a } ] $$</p>
+<p>$$ P(\acute{s}|a, s) = \sum_{r} {\mathbb{P}[S_{t+1}={\acute{s}, r | S_t=s, a}]} $$</p>
 <p>The reward function $ R $ could be either determinsitc(the reward is always the same) or stochastic(the reward vary according to some probability<br>distribution).</p>
 <p>** Agent: **</p>
 <p>agent take actions based on policy and then get future reward for this policy. The goal of RL is to find the optimical policy<br>to maximize the future reward. </p>
@@ -26,11 +26,11 @@
 <p>the state-value of a state s is the expected return if we are in this state at time t, $ S_t = s $.</p>
 <p>$$ V_{\pi}(s) = E[G_t|S_t=s] $$</p>
 <p>the action value of a state-action pair:</p>
-<p>$$ Q_{\pi}(s,a) = E[G_t | S_t=s, A_t=a] $$</p>
+<p>$$ Q_{\pi}(s,a)=E[ G_t | S_t=s, A_t=a ] $$</p>
 <p>$$ V_{\pi}(s) = \sum_{a}{Q_{\pi}(s, a)\pi(a, s)} $$</p>
 <h2 id="value-based-methods"><a href="#value-based-methods" class="headerlink" title="value-based methods"></a>value-based methods</h2><p>In value-based methods, the goal is to mininze the loss between predicted value and target value to approximate true<br>action-value function. we could get the policy form optimical action-value function implicitly.</p>
 <p>$$ Q_{\pi}^{\ast}=max_{\pi}Q_{\pi} $$ </p>
-<p>$$ \pi^{\ast}=\argmax{\pi}Q_{\pi} $$</p>
+<p>$$ \pi^{\ast}=\mathop{argmax}\limits_{\pi}Q_{\pi} $$</p>
 <p>** Bellman Expections Equations **</p>
 <p>$$ V_{\pi}(s) = \sum_{a}Q_{\pi}(s,a)\pi(a|s) $$</p>
 <p>$$ Q_{\pi}(s,a) = R(s, a) + \lambda \sum_{\acute{s}} \mathbb{P}<em>{s,\acute{s}}^{a}V</em>{\pi}(\acute{s}) $$ </p>
