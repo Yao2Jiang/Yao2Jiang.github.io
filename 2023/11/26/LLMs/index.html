@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Conlusion of tuning methods on LLMs"><meta name="keywords" content="Large Language Models"><meta name="author" content="Conglei Xu"><meta name="copyright" content="Conglei Xu"><title>Conlusion of tuning methods on LLMs | Welcome to my Blog.</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script><!-- hexo-inject:begin --><!-- hexo-inject:end -->var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Views-about-LLMs"><span class="toc-number">2.</span> <span class="toc-text">Views about LLMs</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tuning-methods"><span class="toc-number">3.</span> <span class="toc-text">Tuning methods</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#prompt-engineering"><span class="toc-number">4.</span> <span class="toc-text">prompt engineering:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#paramerent-efficient-fine-tuning"><span class="toc-number">5.</span> <span class="toc-text">paramerent-efficient fine-tuning</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Instruction-tuning"><span class="toc-number">6.</span> <span class="toc-text">Instruction tuning</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/new.jpg"></div><div class="author-info__name text-center">Conglei Xu</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/xiaojianhai">Follow me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">21</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">10</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">11</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/header.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Welcome to my Blog.</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Conlusion of tuning methods on LLMs</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-11-26</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Natural-Language-Processing/">Natural Language Processing</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>This article concluded the difference between prompt engineering, paramen-efficient tuning and instruction tuning in aspects of generalized ability and give<br>a simple map to use thses methods under different conditions.</p>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><h1 id="Views-about-LLMs"><a href="#Views-about-LLMs" class="headerlink" title="Views about LLMs"></a>Views about LLMs</h1><p>human got information from the world by reading, listening, watching, feeling, thinking in a interactive way. Even though,<br>LLMs are trained on huge dataset ( number of trillions tokens), on which human need to spend 2000 years to read, it is still lack of lots of information in real-world. Bseides on that,<br>Human not only learn knowledge by reading, but also learn how to use these knowledge in real-world life. In my opions, this basic fact may the reason of validity of prompt and instruction tuning.<br>By in-context learning and instruction tuning, LLMs learn how to use its basic knowledge. </p>
+<p>In conclusion, the interactive way of learning, including how to use knowledge and how to acuqire and use knowledge in a diverse way, is very important for LLMs.</p>
+<h1 id="Tuning-methods"><a href="#Tuning-methods" class="headerlink" title="Tuning methods"></a>Tuning methods</h1><ol>
+<li><p>prompt engineering: During the training phase of models, we give some question samples to tell model how to use knowledge to do generation.<br>The parameters of models don’t need update. </p>
+</li>
+<li><p>instruction tuning: LLMs are trained under supervised learning, the training samples are revised into instruction format. The core concept of it is to<br>make LLMs follow human instructions. The parameters of models are fully updated. </p>
+</li>
+<li><p>paramerent-efficient tuning: Using adapter or prefix to make LLMs specialized on some specific tasks. Only few of parameters are updated. </p>
+</li>
+</ol>
+<p>Usually, the generalized ability of models are as follows:</p>
+<p>prompt &gt; instruction fine-tuning &gt; paramen-efficient fine-tuning &gt; fully fine-tuning</p>
+<h1 id="prompt-engineering"><a href="#prompt-engineering" class="headerlink" title="prompt engineering:"></a>prompt engineering:</h1><p>prompt engineering gives models prompts to help it use its knowledge, acquired in pretrain phase, efficiently. We need to elaborate prompt patterns instead of collecting thousands of supervised samples. </p>
+<p>Advantages:</p>
+<ol>
+<li><p>Few-shot prompting leads to a major reduction in the need for task-specific data.</p>
+</li>
+<li><p>It is very efficient due to it doesn’t need to update parameters. </p>
+</li>
+<li><p>No catastrophic forgetting. </p>
+</li>
+<li><p>It generally does better in out-of-distribution generation. </p>
+</li>
+<li><p>It provides a direct interactive way between human and models. </p>
+</li>
+</ol>
+<p>Disadvatages:</p>
+<ol>
+<li><p>It increases the cost of inference. </p>
+</li>
+<li><p>It is hard to find robust, consistent, and interpretable rules for prompt selection.  </p>
+</li>
+</ol>
+<p>There are many ways to construct prompts, scuh as ‘chain-of-thougts’, ‘zero-shot-CoT’.</p>
+<h1 id="paramerent-efficient-fine-tuning"><a href="#paramerent-efficient-fine-tuning" class="headerlink" title="paramerent-efficient fine-tuning"></a>paramerent-efficient fine-tuning</h1><p>This method allow LLMs to adapt in new tasks without updating all parameters, using adapter or prefix in training phase. </p>
+<p>Adapter fine-tuning: It inserts task-specific layers between the layers of pretrained Language models, called adapters. In training Phase, we just<br>need to train the adapters. It is memory-efficient, mitigates catastrophic forgetting while not introducing inference latency.</p>
+<p>prefix-tuning: In this method, we aims to train task-specific vectors, which is prepended into the input of models. During training, only prefix parameters need to be updated. </p>
+<p>Advantages: </p>
+<ol>
+<li><p>It outperforms fine-tuing in low-data setting. </p>
+</li>
+<li><p>It yileds better accuracy than prompt engineering. </p>
+</li>
+<li><p>For prefix tuning, it support mix-task batch data in inference phase. </p>
+</li>
+<li><p>Some researchers show that prefix-tuning requires considerably fewer parameters compared to adapter tuning.<br>The intuition is prefix-tuning keeps the pretrained language models intact as much as possibile and therefore exploits the language models more than adapter tuning. </p>
+</li>
+</ol>
+<h1 id="Instruction-tuning"><a href="#Instruction-tuning" class="headerlink" title="Instruction tuning"></a>Instruction tuning</h1><p>Under instruction tuning, LLMs learn how to use its knowledge upon on human instructions. It is kind of another mehtod to make LLMs interact with human. Specifically, in instruction tuning, we full-tuning the LLMs by elaborated instruction datasets. after that,<br>LLMs achieves a good performance on other unseen tasks with instruction. </p>
+<p>Advantages:</p>
+<ol>
+<li>It is the state-of-art method to fine-tune LLMs. it doesn’t hurt the generalized ability of LLMs like paramen-efficient tuning, and teach LLMs<br>how to peform instruction with its knowledge. </li>
+</ol>
+<p>Disadvatages:</p>
+<ol>
+<li><p>It needs a very large instruction tuning dataset, which is diverse in type of topics and tasks.</p>
+</li>
+<li><p>The quality and quantity of dataset should be guranted. </p>
+</li>
+</ol>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Large-Language-Models/">Large Language Models</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/11/04/BPE/"><span>Byte-Pair Encoding Algorithm</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://raw.githubusercontent.com/yao2jiang/blog_images/master/bolg_index/header.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Conglei Xu</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://xiaojianhai.github.io/">blog</a>!</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css"><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body></html>
